@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
+import 'endemik_service.dart';
+import 'endemik.dart';
 import 'detail_page.dart';
 
 void main() => runApp(const MyApp());
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+        return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Halo Flutter',
       theme: ThemeData(
@@ -33,7 +34,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var jsonList;
+  List<Endemik> endemik = [];
   var isLoading = true;
 
   @override
@@ -43,32 +44,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _getData() async {
-    try {
-      /* dengan base option
-      var response = await Dio(BaseOptions(
-        baseUrl: 'https://api.jikan.moe/v4/',
-        connectTimeout: 5000,
-        receiveTimeout: 3000,
-        contentType: 'application/json',
-      )).get('recommendations/anime');
-      */
+    final endemikService = EndemikService();
+    final endemik = await endemikService.getData();
 
-      var response = await Dio()
-          .get('https://hendroprwk08.github.io/data_endemik/endemik.json');
-
-      // jika berhasil
-      if (response.statusCode == 200) {
-        setState(() {
-          jsonList = response.data as List; // jika tak ada key
-          // jsonList = response.data['data'] as List; // jika ada key
-          isLoading = false;
-        });
-      } else {
-        print(response.statusCode);
-      }
-    } catch (e) {
-      print(e);
-    }
+    setState(() {
+      this.endemik = endemik;
+      isLoading = false;
+    });
   }
 
   @override
@@ -81,35 +63,53 @@ class _MyHomePageState extends State<MyHomePage> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 5,
-          children: List.generate(jsonList == null ? 0 : jsonList.length, (index) { // 10 data saja
-            return Card(
-              color: Colors.white70,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(5),
-                      topLeft: Radius.circular(5),
+                crossAxisCount: 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+                children: List.generate(endemik == null ? 0 : endemik.length,
+                    (index) {
+                  final endemikItem = endemik[index];
+
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/detail',
+                          arguments: {
+                            'a_id': endemikItem.id,
+                            'a_nama': endemikItem.nama,
+                            'a_nama_latin': endemikItem.nama_latin,
+                            'a_deskripsi': endemikItem.deskripsi,
+                            'a_asal': endemikItem.asal,
+                            'a_foto': endemikItem.foto,
+                            'a_status': endemikItem.status,
+                          });
+                    },
+                    child: Card(
+                      color: Colors.white70,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(5),
+                              topLeft: Radius.circular(5),
+                            ),
+                            child: Image.network(
+                              endemikItem.foto,
+                              height: 170,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                          Text(endemikItem.nama.length >= 20
+                              ? endemikItem.nama.substring(0, 20)
+                              : endemikItem.nama)
+                        ],
+                      ),
                     ),
-                    child: Image.network(
-                      jsonList[index]['foto'],
-                      height: 170,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
-                  ),
-                  Text( jsonList[index]['nama'].length >= 20 ? jsonList[index]['nama'].substring(0, 10) : jsonList[index]['nama'])
-                ],
-              ),
-            );
-          }),
-        )
-    );
+                  );
+                }),
+              ));
   }
 }
