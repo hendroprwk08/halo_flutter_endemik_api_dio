@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'endemik.dart';
+import '../model/endemik.dart';
 
 class EndemikService {
   final Dio _dio = Dio();
