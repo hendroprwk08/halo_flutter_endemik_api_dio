@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/endemik.dart';
-import '../services/endemik_service.dart';
+import '../service/endemik_service.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
