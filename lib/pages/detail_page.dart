@@ -8,6 +8,7 @@ class DetailPage extends StatelessWidget {
     // tangkap argument dari main.dart
     final Map? arguments = ModalRoute.of(context)?.settings.arguments as Map?;
     var _id = arguments?['a_id'];
+    var _tag = arguments?['a_tag'];
     var _nama = arguments?['a_nama'];
     var _nama_latin = arguments?['a_nama_latin'];
     var _deskripsi = arguments?['a_deskripsi'];
@@ -29,13 +30,16 @@ class DetailPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: MediaQuery.of(context).size.width, // Full width,
-                height: 320,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(_foto),
-                    fit: BoxFit.cover,
+              Hero(
+                tag: _tag,
+                child: Container(
+                  width: MediaQuery.of(context).size.width, // Full width,
+                  height: 320,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(_foto),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),

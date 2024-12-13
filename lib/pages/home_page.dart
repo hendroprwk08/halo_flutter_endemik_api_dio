@@ -50,6 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTap: () {
                     Navigator.pushNamed(context, '/detail',
                         arguments: {
+                          'a_tag': 'image $index',
                           'a_id': endemikItem.id,
                           'a_nama': endemikItem.nama,
                           'a_nama_latin': endemikItem.nama_latin,
@@ -71,11 +72,14 @@ class _MyHomePageState extends State<MyHomePage> {
                             topRight: Radius.circular(5),
                             topLeft: Radius.circular(5),
                           ),
-                          child: Image.network(
-                            endemikItem.foto,
-                            height: 170,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
+                          child: Hero(
+                            tag: 'image $index',
+                            child: Image.network(
+                              endemikItem.foto,
+                              height: 170,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
                           ),
                         ),
                         Text(endemikItem.nama.length >= 20
