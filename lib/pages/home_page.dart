@@ -31,6 +31,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var orientation = MediaQuery.of(context).orientation;
+
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -39,7 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: isLoading
             ? const Center(child: CircularProgressIndicator())
             : GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: orientation == Orientation.portrait ? 2 : 4,
           crossAxisSpacing: 5,
           mainAxisSpacing: 5,
           children: List.generate(endemik == null ? 0 : endemik.length,
@@ -63,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Card(
                     color: Colors.white70,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     child: Column(
                       children: [
@@ -76,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             tag: 'image $index',
                             child: Image.network(
                               endemikItem.foto,
-                              height: 170,
+                              height: orientation == Orientation.portrait ? 170 : 185,
                               fit: BoxFit.cover,
                               width: double.infinity,
                             ),

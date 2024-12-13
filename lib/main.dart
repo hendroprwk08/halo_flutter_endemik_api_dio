@@ -5,6 +5,7 @@ import 'pages/home_page.dart';
 void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  // pengaturan hanya berorientasi potrait
   const MyApp({super.key});
 
   @override
